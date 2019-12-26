@@ -1,2 +1,2 @@
-# ARMeasureOpenCV
-This is an android app with measure functionality
+# Object Measurement 
+Object Measurement App like Google Measure App written in java.
