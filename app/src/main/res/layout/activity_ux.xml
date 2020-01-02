@@ -14,24 +14,87 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnDistance"
-        android:text="@string/length"/>
+        android:text="Measure"/>
 
+    <Button
+        android:id="@+id/btnHeight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="end"
+        android:text="@string/height" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnHeight"
-        android:text="@string/height"
-        android:layout_gravity="end"/>
+        android:text="Solve DIMS"
+        android:layout_marginTop="600dp"
+        android:layout_gravity="end"
+        android:onClick="JumpActivity"/>
 
+    <TextView
+        android:id="@+id/txtLength"
+        android:layout_width="154dp"
+        android:layout_height="29dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="200dp"
+        android:textSize="20dp"></TextView>
+
+    <Button
+        android:id="@+id/btnSaveLen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+
+        android:layout_marginTop="230dp"
+        android:onClick="save_Len"
+        android:text="Save L" />
+
+    <TextView
+        android:id="@+id/txtBreadth"
+        android:layout_width="150dp"
+        android:layout_height="29dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="280dp"
+        android:textSize="20dp"></TextView>
+
+    <Button
+        android:id="@+id/btnSaveBreadth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="310dp"
+        android:onClick="save_Bht"
+        android:text="Save B" />
+
+    <TextView
+        android:id="@+id/txtHeight"
+        android:layout_width="152dp"
+        android:layout_height="29dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="360dp"
+        android:textSize="20dp"></TextView>
+
+    <Button
+        android:id="@+id/btnSaveHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="390dp"
+        android:onClick="save_Hgt"
+        android:text="Save H" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/clear"
         android:id="@+id/clear"
         android:layout_gravity="center_horizontal"/>
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cleard"
+        android:layout_gravity="end"
+        android:onClick="clearall"/>
     <TextView
-        android:textSize="20sp"
+        android:textSize="40sp"
         android:id="@+id/txtDistance"
         android:layout_gravity="bottom"
         android:gravity="center"

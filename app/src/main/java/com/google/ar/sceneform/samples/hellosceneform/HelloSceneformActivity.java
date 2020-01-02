@@ -4,16 +4,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.Toast;import android.app.Activity;
+import android.view.Menu;
+import android.view.MenuItem;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
@@ -41,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-
 public class HelloSceneformActivity extends AppCompatActivity implements Node.OnTapListener, Scene.OnUpdateListener {
     private static final String TAG = HelloSceneformActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
@@ -50,12 +52,18 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
     ArrayList<Float> arrayList2 = new ArrayList<>();
     private ArFragment arFragment;
     private AnchorNode lastAnchorNode;
-    private TextView txtDistance;
+    private TextView txtDistance,txtLength,txtBreadth,txtHeight;
     Button btnDist, btnHeight, btnClear;
     ModelRenderable cubeRenderable, heightRenderable;
     boolean btnHeightClicked, btnLengthClicked;
     Vector3 point1, point2;
-
+    public static float value;
+    public static boolean len = false;
+    public static boolean ben = false;
+    public static boolean hen = false;
+    public static float length;
+    public static float breadth;
+    public static float height;
     @SuppressLint("SetTextI18n")
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -69,6 +77,9 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
         setContentView(R.layout.activity_ux);
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.ux_fragment);
         txtDistance = findViewById(R.id.txtDistance);
+        txtHeight = findViewById(R.id.txtHeight);
+        txtLength = findViewById(R.id.txtLength);
+        txtBreadth = findViewById(R.id.txtBreadth);
         btnDist = findViewById(R.id.btnDistance);
         btnDist.setOnClickListener(v -> {
             btnLengthClicked = true;
@@ -110,23 +121,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                     }
 
                     if (btnHeightClicked) {
-                        if (lastAnchorNode != null) {
-                            Toast.makeText(this, "Please click clear button", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        Anchor anchor = hitResult.createAnchor();
-                        AnchorNode anchorNode = new AnchorNode(anchor);
-                        anchorNode.setParent(arFragment.getArSceneView().getScene());
-                        TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
-                        transformableNode.setParent(anchorNode);
-                        transformableNode.setRenderable(heightRenderable);
-                        transformableNode.select();
-                        ScaleController scaleController = transformableNode.getScaleController();
-                        scaleController.setMaxScale(10f);
-                        scaleController.setMinScale(0.01f);
-                        transformableNode.setOnTapListener(this);
-                        arFragment.getArSceneView().getScene().addOnUpdateListener(this);
-                        lastAnchorNode = anchorNode;
+                       Log.e("value",String.valueOf(HelloSceneformActivity.value));
                     }
 
                     if (btnLengthClicked) {
@@ -149,7 +144,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                         } else {
                             int val = motionEvent.getActionMasked();
                             float axisVal = motionEvent.getAxisValue(MotionEvent.AXIS_X, motionEvent.getPointerId(motionEvent.getPointerCount() - 1));
-                            Log.e("Values:", String.valueOf(val) + String.valueOf(axisVal));
+                            //Log.e("Values:", String.valueOf(val) + String.valueOf(axisVal));
                             Anchor anchor = hitResult.createAnchor();
                             AnchorNode anchorNode = new AnchorNode(anchor);
                             anchorNode.setParent(arFragment.getArSceneView().getScene());
@@ -163,7 +158,9 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                                 arrayList2.add(pose.tz());
                                 double q = (((getDistanceMeters(arrayList1, arrayList2)*100))*0.393701);
                                 float d = (float) q;
-                                txtDistance.setText("Distance: " + String.valueOf(d)+" inches");
+                                value = Float.valueOf(d).floatValue();
+                                txtDistance.setText( String.valueOf(d)+" inches");
+
                             } else {
                                 arrayList1.clear();
                                 arrayList1.addAll(arrayList2);
@@ -173,7 +170,9 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                                 arrayList2.add(pose.tz());
                                 double q = (((getDistanceMeters(arrayList1, arrayList2)*100))*0.393701);
                                 float d = (float) q;
-                                txtDistance.setText("Distance: " + String.valueOf(d)+" inches");
+                                value = Float.valueOf(d).floatValue();
+                                txtDistance.setText( String.valueOf(d)+" inches");
+
                             }
 
                             TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
@@ -242,7 +241,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
     @SuppressLint("ObsoleteSdkInt")
     public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
         if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
-            Log.e(TAG, "Sceneform requires Android N or later");
+            //Log.e(TAG, "Sceneform requires Android N or later");
             Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();
             activity.finish();
             return false;
@@ -252,7 +251,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                         .getDeviceConfigurationInfo()
                         .getGlEsVersion();
         if (Double.parseDouble(openGlVersionString) < MIN_OPENGL_VERSION) {
-            Log.e(TAG, "Sceneform requires OpenGL ES 3.0 later");
+            //Log.e(TAG, "Sceneform requires OpenGL ES 3.0 later");
             Toast.makeText(activity, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG)
                     .show();
             activity.finish();
@@ -275,7 +274,7 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
                         renderableSize.y * transformableNodeScale.y,
                         renderableSize.z * transformableNodeScale.z);
         txtDistance.setText("Height: " + String.valueOf(finalSize.y));
-        Log.e("FinalSize: ", String.valueOf(finalSize.x + " " + finalSize.y + " " + finalSize.z));
+        //Log.e("FinalSize: ", String.valueOf(finalSize.x + " " + finalSize.y + " " + finalSize.z));
         //Toast.makeText(this, "Final Size is " + String.valueOf(finalSize.x + " " + finalSize.y + " " + finalSize.z), Toast.LENGTH_SHORT).show();
     }
 
@@ -286,5 +285,59 @@ public class HelloSceneformActivity extends AppCompatActivity implements Node.On
 //        for (Anchor anchor : updatedAnchors) {
 //            Handle updated anchors...
 //        }
+    }
+
+    public void save_Len(View view) {
+         length = value;
+         len = true;
+        txtLength.setText("L : "+String.valueOf(length)+" in");
+    }
+
+    public void save_Bht(View view) {
+         breadth = value;
+         ben = true;
+        txtBreadth.setText("B : "+ String.valueOf(breadth)+" in");
+    }
+
+    public void save_Hgt(View view) {
+         height = value;
+         hen = true;
+        txtHeight.setText("H : "+ String.valueOf(height)+" in");
+    }
+
+    public void clearall(View view) {
+        txtHeight.setText("");
+        txtBreadth.setText("");
+        txtLength.setText("");
+        txtDistance.setText("");
+        List<Node> children = new ArrayList<>(arFragment.getArSceneView().getScene().getChildren());
+        for (Node node : children) {
+            if (node instanceof AnchorNode) {
+                if (((AnchorNode) node).getAnchor() != null) {
+                    ((AnchorNode) node).getAnchor().detach();
+                }
+            }
+            if (!(node instanceof Camera) && !(node instanceof Sun)) {
+                node.setParent(null);
+            }
+        }
+        arrayList1.clear();
+        arrayList2.clear();
+        lastAnchorNode = null;
+        point1 = null;
+        point2 = null;
+    }
+
+    public void JumpActivity(View view) {
+if(len && ben && hen ){
+
+        Intent jump = new Intent(getApplicationContext(),DIMS.class);
+        jump.putExtra("length",length);
+        jump.putExtra("breadth",breadth);
+        jump.putExtra("height",height);
+        startActivity(jump);
+    }
+    else
+    Toast.makeText(getApplicationContext(),"Please Find Length , breadth and height first",Toast.LENGTH_LONG).show();
     }
 }
